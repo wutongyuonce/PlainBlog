@@ -1,0 +1,34 @@
+---
+import { site } from "../config";
+import Breadcrumb from "../components/Breadcrumb.astro";
+import "../styles/global.css";
+
+interface Props {
+  title: string;
+  description: string;
+  current?: string;
+  article?: string;
+}
+const { title, description, current, article } = Astro.props;
+const canonical = Astro.site
+  ? new URL(Astro.url.pathname, Astro.site).href
+  : undefined;
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <title>{title} · {site.name}</title>
+    {canonical && <link rel="canonical" href={canonical} />}
+  </head>
+  <body>
+    <a class="skip-link" href="#main">跳到正文</a>
+    <div class="shell">
+      <Breadcrumb current={current} article={article} />
+      <main id="main"><slot /></main>
+    </div>
+  </body>
+</html>

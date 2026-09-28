@@ -1,0 +1,25 @@
+{
+  "name": "plainblog",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "format": "prettier --check .",
+    "format:write": "prettier --write .",
+    "test": "SITE_URL= astro build && node --test tests/publication.test.mjs tests/site.test.mjs && node --test tests/build-validation.test.mjs && SITE_URL= astro build",
+    "lint": "astro check"
+  },
+  "dependencies": {
+    "astro": "^5.0.0"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.0",
+    "prettier": "^3.0.0",
+    "prettier-plugin-astro": "^0.14.0",
+    "typescript": "^5.0.0",
+    "linkedom": "^0.18.0"
+  }
+}
