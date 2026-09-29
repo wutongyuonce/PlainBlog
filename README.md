@@ -1,10 +1,12 @@
 # PlainBlog
 
-黑色极简静态博客，也可切换为白底。首页按年份列出文章，正文使用紧凑的 Markdown 排版；导航是无背景框的面包屑和按需展开的目录。主题灵感来源来自 https://hyoban.cc。
+黑色极简静态博客，也可切换为白底。首页按年份列出文章，正文使用紧凑的 Markdown 排版；导航是无背景框的面包屑和按需展开的目录。主题灵感来源来自 https://hyoban.cc
 
 仓库里的文字和图片是可替换的演示内容。产品行为见 [规格](docs/SPEC.md)。
 
-<img src="docs/previews/home.png" alt="首页" style="zoom:40%;" />
+<img src="docs/previews/home-dark.png" alt="深色主题下的首页" style="zoom:40%;" />
+
+<img src="docs/previews/home-light.png" alt="浅色主题下的首页" style="zoom:40%;" />
 
 ## 开始
 
