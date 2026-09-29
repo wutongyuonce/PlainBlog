@@ -1,10 +1,10 @@
 # PlainBlog
 
-黑色极简静态博客，也可切换为白底。首页按年份列出文章，正文使用紧凑的 Markdown 排版；导航是无背景框的面包屑和按需展开的目录。
+黑色极简静态博客，也可切换为白底。首页按年份列出文章，正文使用紧凑的 Markdown 排版；导航是无背景框的面包屑和按需展开的目录。主题灵感来源来自 https://hyoban.cc。
 
-![首页](docs/previews/home.png)
+仓库里的文字和图片是可替换的演示内容。产品行为见 [规格](docs/SPEC.md)。
 
-仓库里的文字和图片是可替换的演示内容，不代表维护者的真实经历。产品行为见 [规格](docs/SPEC.md)。
+<img src="docs/previews/home.png" alt="首页" style="zoom:40%;" />
 
 ## 开始
 
@@ -34,7 +34,7 @@ pnpm preview
 - 在 `src/content/posts/` 新建单层、全小写 kebab-case 的 `.md` 文件，例如 `my-note.md`。Frontmatter 必须有非空 `title` 和引号包围的 `YYYY-MM-DD` 日期；正文从 `##` 开始。`draft: true` 会从首页和正文输出中排除；未写 draft 时默认公开。未来日期不会自动隐藏。
 - 编辑 `src/content/pages/home.md` 修改首页介绍；`projects.md` 和 `about.md` 维护独立页面。页面标题由配置或对应 Astro 页面负责。
 - `markdown-field-guide.md` 同时是 Markdown 渲染样例。若移除它，请把测试里的该路径换成保留的排版样例。新增普通文章不必修改测试清单。
-- 图片放在 `src/assets/`，从文章用相对路径引用，例如 `![说明](../../assets/reading-lines.svg)`。缺失的相对图片会让构建失败。
+- 文章配图放在 `src/assets/posts/<文章文件名>/`，用可读文件名，例如 `![说明](../../assets/posts/my-note/photo.jpg)`。不要把图片放进 `src/content/posts/`，那里只放一层 Markdown。缺失的相对图片会让构建失败。
 
 ## 部署
 

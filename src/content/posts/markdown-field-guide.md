@@ -23,9 +23,11 @@ date: "2025-06-14"
 
 ### 链接、图片与宽内容
 
-可以阅读 [Markdown Guide](https://www.markdownguide.org/basic-syntax/)，也可以测试一条很长的链接：<https://example.org/notes/this-is-a-deliberately-long-path-for-testing-how-links-wrap-on-very-narrow-devices/without-breaking-the-whole-page>。示例图片是仓库自带的几何图，不请求远程图床。
+可以阅读 [Markdown Guide](https://www.markdownguide.org/basic-syntax/)，也可以测试一条很长的链接：<https://example.org/notes/this-is-a-deliberately-long-path-for-testing-how-links-wrap-on-very-narrow-devices/without-breaking-the-whole-page>。图片放在 `src/assets/posts/文章文件名/`，用可读文件名，不堆在资源根目录，也不请求远程图床。
 
-![三条不同长度的横线组成的示意图](../../assets/reading-lines.svg)
+![侧卧的黑发人物插画，前景有一只伸出的手](../../assets/posts/markdown-field-guide/sample-portrait.jpg)
+
+![三条不同长度的横线组成的示意图](../../assets/posts/markdown-field-guide/reading-lines.svg)
 
 ```js
 const observations = ["small screens", "keyboard navigation", "static output"];
