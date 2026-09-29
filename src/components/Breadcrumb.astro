@@ -104,9 +104,12 @@ const currentPath = Astro.url.pathname;
           event.preventDefault();
         }
       });
-      menu.addEventListener("focusout", (event) => {
-        if (menu.open && !menu.contains(event.relatedTarget as Node | null))
-          menu.open = false;
+      menu.addEventListener("keydown", (event) => {
+        if (event.key === "Tab") {
+          requestAnimationFrame(() => {
+            if (!menu.contains(document.activeElement)) menu.open = false;
+          });
+        }
       });
     });
 </script>
