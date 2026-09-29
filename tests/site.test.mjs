@@ -86,6 +86,14 @@ test("home is the only index and its dated links reach the rendered articles", a
       ["小红书", "https://www.xiaohongshu.com"],
     ],
   );
+  for (const link of doc.querySelectorAll(".social-link")) {
+    const svg = link.querySelector("svg");
+    assert.equal(svg?.getAttribute("viewBox"), "0 0 24 24");
+    assert.ok(
+      svg.querySelector("path")?.getAttribute("d")?.length > 50,
+      `${link.textContent.trim()} needs a real brand mark`,
+    );
+  }
 });
 
 test("article uses a noninteractive Blog crumb and ships rendered Markdown", async () => {

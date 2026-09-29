@@ -2,15 +2,16 @@
 
 PlainBlog 是 Astro 静态站点；`astro.config.mjs` 固定静态输出、尾部斜线、Shiki `vitesse-dark` 暗色主题、图片透传服务，以及可选 `SITE_URL`。没有客户端路由或 UI 框架。静态主机负责把未知路径以 404 状态返回 `dist/404.html`。
 
-| 职责                                                           | 唯一 authority                               | 使用者                                                                                  |
-| -------------------------------------------------------------- | -------------------------------------------- | --------------------------------------------------------------------------------------- |
-| 站点信息与目录入口                                             | `src/config.ts`                              | 布局、面包屑、首页                                                                      |
-| 内容形状与 frontmatter                                         | `src/content.config.ts` 的 Astro 集合 schema | Astro 构建；文件名交给 publication 校验                                                 |
-| 日期日历语义、平面 slug、draft 排除、日期与 slug 排序、重复 ID | `src/lib/publication.mjs`                    | 内容 schema/loader、首页、文章 `getStaticPaths()`                                       |
-| 文档 head 与页面外壳                                           | `src/layouts/Base.astro`                     | 全部路由                                                                                |
-| 面包屑与唯一站点目录                                           | `src/components/Breadcrumb.astro`            | Base；按实际 URL 判断当前页；原生 details/summary 管开闭，脚本只处理外点、Esc、Tab 离开 |
-| 页面与正文排版                                                 | `src/styles/global.css`                      | 全站及文章、Projects、About 的 `.prose`；浅色和深色只换这一组变量                       |
-| 公开文章 RSS                                                   | `src/pages/rss.xml.ts`                       | 复用 publication 的公开结果；不另写筛选规则                                             |
+| 职责                                                           | 唯一 authority                                  | 使用者                                                                                  |
+| -------------------------------------------------------------- | ----------------------------------------------- | --------------------------------------------------------------------------------------- |
+| 站点信息与目录入口                                             | `src/config.ts`                                 | 布局、面包屑、首页                                                                      |
+| 内容形状与 frontmatter                                         | `src/content.config.ts` 的 Astro 集合 schema    | Astro 构建；文件名交给 publication 校验                                                 |
+| 日期日历语义、平面 slug、draft 排除、日期与 slug 排序、重复 ID | `src/lib/publication.mjs`                       | 内容 schema/loader、首页、文章 `getStaticPaths()`                                       |
+| 文档 head 与页面外壳                                           | `src/layouts/Base.astro`                        | 全部路由                                                                                |
+| 面包屑与唯一站点目录                                           | `src/components/Breadcrumb.astro`               | Base；按实际 URL 判断当前页；原生 details/summary 管开闭，脚本只处理外点、Esc、Tab 离开 |
+| 页面与正文排版                                                 | `src/styles/global.css`                         | 全站及文章、Projects、About 的 `.prose`；浅色和深色只换这一组变量                       |
+| 公开文章 RSS                                                   | `src/pages/rss.xml.ts`                          | 复用 publication 的公开结果；不另写筛选规则                                             |
+| 社交品牌图标                                                   | `src/lib/social-icons.mjs`（Simple Icons，CC0） | 首页社交链接；只按 config 的 `icon` 字段取用，不从显示文字推断                          |
 
 首页 `src/pages/index.astro` 是唯一聚合页面；文章路由 `src/pages/blog/[slug].astro` 只用发布选择结果生成路径。首页介绍和 Projects/About 引入 `src/content/pages/` 下的 Markdown 组件，而文章走 `src/content/posts/` 集合。HTML 的唯一 h1 由路由生成，Markdown 正文从 h2 开始。静态 404 来自 `src/pages/404.astro`。
 

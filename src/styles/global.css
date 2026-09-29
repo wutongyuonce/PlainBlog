@@ -237,18 +237,9 @@ h1,
 .intro .social-link svg {
   width: 1em;
   height: 1em;
-  margin-right: 0.18em;
-  vertical-align: -0.15em;
-}
-.intro .social-link svg.fill {
+  margin-right: 0.15em;
+  vertical-align: -0.12em;
   fill: currentColor;
-}
-.intro .social-link svg.stroke {
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.4;
-  stroke-linecap: round;
-  stroke-linejoin: round;
 }
 .intro .social-link span {
   text-decoration: underline;

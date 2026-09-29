@@ -6,9 +6,13 @@ export const site = {
     { label: "About", href: "/about/" },
   ],
   social: [
-    { label: "GitHub", href: "https://github.com" },
-    { label: "X", href: "https://x.com" },
-    { label: "B站", href: "https://www.bilibili.com" },
-    { label: "小红书", href: "https://www.xiaohongshu.com" },
+    { label: "GitHub", icon: "github", href: "https://github.com" },
+    { label: "X", icon: "x", href: "https://x.com" },
+    { label: "B站", icon: "bilibili", href: "https://www.bilibili.com" },
+    {
+      label: "小红书",
+      icon: "xiaohongshu",
+      href: "https://www.xiaohongshu.com",
+    },
   ],
 };
