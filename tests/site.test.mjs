@@ -22,7 +22,17 @@ test("home is the only index and its dated links reach the rendered articles", a
   assert.equal(doc.querySelectorAll("h1").length, 1);
   assert.ok(doc.querySelector("main"));
   assert.ok(doc.querySelector('a[href="#main"]'));
+  const years = [...doc.querySelectorAll("[data-year]")].map((group) =>
+    Number(group.getAttribute("data-year")),
+  );
+  for (let i = 1; i < years.length; i++) {
+    assert.ok(
+      years[i - 1] > years[i],
+      "year groups must descend without duplicates",
+    );
+  }
   const items = [...doc.querySelectorAll(".post-list li")];
+  let previous;
   assert.ok(items.length > 0, "the template ships readable sample articles");
   for (const item of items) {
     const anchor = item.querySelector("a");
@@ -34,6 +44,21 @@ test("home is the only index and its dated links reach the rendered articles", a
       anchor.textContent.trim(),
     );
     const time = item.querySelector("time");
+    const date = time.getAttribute("datetime");
+    const slug = href.split("/")[2];
+    if (previous) {
+      assert.ok(
+        previous.date >= date,
+        "readers must see newest articles first",
+      );
+      if (previous.date === date) {
+        assert.ok(
+          previous.slug < slug,
+          "same-day articles must keep ascending slug order",
+        );
+      }
+    }
+    previous = { date, slug };
     assert.match(time.textContent.trim(), /^\d{2}\/\d{2}$/);
     assert.equal(
       article.querySelector("time").getAttribute("datetime"),
