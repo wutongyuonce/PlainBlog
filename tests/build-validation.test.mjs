@@ -6,6 +6,7 @@ import {
   cp,
   mkdtemp,
   readFile,
+  readdir,
   writeFile,
   unlink,
   symlink,
@@ -155,6 +156,15 @@ test("a sub-path deployment prefixes internal links and keeps URLs absolute", as
     "/PlainBlog/",
   );
 
+  // Site-root links written by hand in Markdown must carry the prefix too, while
+  // external links stay untouched.
+  const introLinks = [...home.querySelectorAll(".intro a")].map((a) =>
+    a.getAttribute("href"),
+  );
+  assert.ok(introLinks.includes("/PlainBlog/about/"), introLinks.join(", "));
+  assert.ok(introLinks.includes("/PlainBlog/projects/"), introLinks.join(", "));
+  assert.ok(introLinks.includes("https://github.com"), introLinks.join(", "));
+
   const article = await documentAt("blog/markdown-field-guide");
   assert.equal(
     article.querySelector('link[rel="canonical"]').getAttribute("href"),
@@ -167,4 +177,36 @@ test("a sub-path deployment prefixes internal links and keeps URLs absolute", as
     /<link>https:\/\/blog\.example\.org\/PlainBlog\/blog\/[a-z0-9-]+\/<\/link>/,
   );
   assert.doesNotMatch(feed, /PlainBlog\/PlainBlog/);
+
+  // Exhaustive rather than point-wise: every link the sub-path build emits must be
+  // prefixed, absolute, an in-page anchor, or an external URL. This is the check
+  // that catches a newly added page or Markdown link that forgets the prefix.
+  const strays = [];
+  for (const file of await readdir(join(fixture, "dist"), {
+    recursive: true,
+  })) {
+    if (!file.endsWith(".html")) continue;
+    const doc = parseHTML(
+      await readFile(join(fixture, "dist", file), "utf8"),
+    ).document;
+    for (const el of doc.querySelectorAll("[href],[src]")) {
+      for (const attr of ["href", "src"]) {
+        const value = el.getAttribute(attr);
+        if (!value) continue;
+        const resolved =
+          value.startsWith("http") ||
+          value.startsWith("#") ||
+          value.startsWith("mailto:") ||
+          value.startsWith("data:") ||
+          value.startsWith("/PlainBlog/");
+        if (!resolved) strays.push(`${file} ${attr}=${value}`);
+      }
+    }
+  }
+  assert.deepEqual(
+    strays,
+    [],
+    `unprefixed paths in the sub-path build:
+${strays.join("\n")}`,
+  );
 });

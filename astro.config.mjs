@@ -1,4 +1,5 @@
 import { defineConfig } from "astro/config";
+import { satteri } from "@astrojs/markdown-satteri";
 
 const site = process.env.SITE_URL;
 if (
@@ -22,6 +23,29 @@ if (base && !/^\/[A-Za-z0-9._~-]+(\/[A-Za-z0-9._~-]+)*$/.test(base)) {
   );
 }
 
+// Authors write site-root links in Markdown ("[关于本站](/about/)"), and Astro's
+// `base` does not rewrite them. Prefix them here so a sub-path deployment keeps
+// them working. Only anchors are touched: the `src` of images Astro generates
+// already carries the base path, and prefixing it again would double it.
+const basePaths = {
+  name: "plainblog-base-paths",
+  element: {
+    filter: ["a"],
+    visit(node, ctx) {
+      const href = node.properties?.href;
+      if (
+        typeof href !== "string" ||
+        !href.startsWith("/") ||
+        href.startsWith("//") ||
+        href.startsWith(`${base}/`)
+      ) {
+        return;
+      }
+      ctx.setProperty(node, "href", `${base}${href}`);
+    },
+  },
+};
+
 export default defineConfig({
   output: "static",
   trailingSlash: "always",
@@ -33,6 +57,7 @@ export default defineConfig({
   ...(site ? { site } : {}),
   ...(base ? { base } : {}),
   markdown: {
+    processor: satteri(base ? { hastPlugins: [basePaths] } : {}),
     shikiConfig: {
       themes: { light: "vitesse-light", dark: "vitesse-dark" },
       defaultColor: false,

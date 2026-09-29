@@ -15,7 +15,7 @@ pnpm preview --host 127.0.0.1 --port 4323
 
 ## 子路径部署
 
-`SITE_URL=https://example.org/ BASE_PATH=/PlainBlog pnpm build` 的产物已检查：首页、面包屑、文章链接、静态资源、canonical 和 RSS 绝对地址都带 `/PlainBlog` 前缀，RSS 内容里没有重复前缀，也没有遗留的根路径链接。`pnpm test` 中的隔离构建会重复覆盖这条路径。
+`SITE_URL=https://example.org/ BASE_PATH=/PlainBlog pnpm build` 的产物已检查：首页、面包屑、文章链接、静态资源、canonical 和 RSS 绝对地址都带 `/PlainBlog` 前缀，RSS 内容里没有重复前缀，也没有遗留的根路径链接。首页介绍里手写的 `[关于本站](/about/)` 会渲染成 `/PlainBlog/about/`，站外链接不变，Astro 生成的图片地址不会被重复加前缀。`pnpm test` 中的隔离构建会重复覆盖这条路径。
 
 ## 尚未执行的部署检查
 
