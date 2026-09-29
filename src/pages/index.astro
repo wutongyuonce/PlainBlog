@@ -4,6 +4,7 @@ import Base from "../layouts/Base.astro";
 import { selectPublished } from "../lib/publication.mjs";
 import { socialIcons } from "../lib/social-icons.mjs";
 import { site } from "../config";
+import { sitePath } from "../lib/paths";
 import HomeIntro from "../content/pages/home.md";
 
 const escapeHtml = (value: string) =>
@@ -53,7 +54,7 @@ const years = [...new Set(posts.map((post) => post.data.date.slice(0, 4)))];
             .filter((post) => post.data.date.startsWith(year))
             .map((post) => (
               <li>
-                <a href={`/blog/${post.id}/`}>{post.data.title}</a>
+                <a href={sitePath(`blog/${post.id}/`)}>{post.data.title}</a>
                 <time datetime={post.data.date}>
                   {post.data.date.slice(5).replace("-", "/")}
                 </time>

@@ -40,6 +40,12 @@ pnpm preview
 
 ## 部署
 
-执行 `pnpm build`，把 `dist/` 发布到静态站点根路径。生产域名确定后，在构建环境设置 `SITE_URL=https://your-domain.example/`（必须是绝对 HTTP(S) 地址），构建才会输出对应页面的 canonical；不设置时不输出 canonical。无需服务端、数据库或运行时环境变量。
+执行 `pnpm build`，把 `dist/` 发布到静态站点根路径。生产域名确定后，在构建环境设置 `SITE_URL=https://your-domain.example/`（必须是绝对 HTTP(S) 地址），构建才会输出对应页面的 canonical；不设置时不输出 canonical。部署在站点子路径时（例如项目页）再设置 `BASE_PATH=/your-sub-path`（不带尾斜线），页面、静态资源、canonical 与订阅地址都会带该前缀；`SITE_URL` 仍然只写源站。无需服务端、数据库或运行时环境变量。
+
+仓库自带一个 GitHub Pages demo：`.github/workflows/deploy.yml` 在每次 push 到 `main` 时跑检查并发布到 `https://wutongyuonce.github.io/PlainBlog/`。启用前需要在仓库 Settings → Pages 把 Source 设为 GitHub Actions。这是仓库唯一的部署配置，其他平台按上面的环境变量自行接入。
 
 配置主机把未知路径映射到 `dist/404.html`，并返回 HTTP 404。`/blog/` 没有汇总页面，也不会自动跳转。目录开关的原生功能不依赖 JavaScript。配色按钮会记住选择；没有 JavaScript 时跟随系统。订阅地址是 `/rss.xml`。它在每次构建时读取全部公开文章，新文章不用手改订阅源；草稿不会进入。设置 `SITE_URL` 后，订阅项和图片地址才会变成绝对链接。
+
+## 许可证
+
+[MIT](LICENSE)，版权归仓库作者。首页社交图标取自 [Simple Icons](https://simpleicons.org)（CC0 1.0），其中的品牌标识归各自所有者。

@@ -1,5 +1,6 @@
 ---
 import { site } from "../config";
+import { sitePath } from "../lib/paths";
 
 interface Props {
   current?: string;
@@ -12,9 +13,9 @@ const currentPath = Astro.url.pathname;
 <nav class="breadcrumbs" aria-label="面包屑">
   <a
     class="home-link"
-    href="/"
+    href={sitePath("/")}
     aria-label="Home"
-    aria-current={currentPath === "/" ? "page" : undefined}
+    aria-current={currentPath === sitePath("/") ? "page" : undefined}
   >
     <svg
       aria-hidden="true"
@@ -49,14 +50,14 @@ const currentPath = Astro.url.pathname;
       {
         site.nav.map(({ label, href }) => (
           <a
-            href={href}
-            aria-current={currentPath === href ? "page" : undefined}
+            href={sitePath(href)}
+            aria-current={currentPath === sitePath(href) ? "page" : undefined}
           >
             {label}
           </a>
         ))
       }
-      <a class="menu-rss" href="/rss.xml"
+      <a class="menu-rss" href={sitePath("rss.xml")}
         >RSS<svg
           aria-hidden="true"
           viewBox="0 0 16 16"

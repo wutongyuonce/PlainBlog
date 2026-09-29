@@ -1,6 +1,7 @@
 import test, { before, after } from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
+import { readFileSync } from "node:fs";
 import {
   cp,
   mkdtemp,
@@ -16,6 +17,11 @@ import { join } from "node:path";
 import { parseHTML } from "linkedom";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
+// Resolve the CLI through the package's own bin field so a future Astro release
+// can move the entry file without breaking the isolated build fixture.
+const astroBin = JSON.parse(
+  readFileSync(join(root, "node_modules/astro/package.json"), "utf8"),
+).bin.astro;
 let fixture;
 let posts;
 
@@ -40,13 +46,13 @@ after(async () => {
   if (fixture) await rm(fixture, { recursive: true, force: true });
 });
 
-function build(siteUrl = "") {
+function build(siteUrl = "", basePath = "") {
   return spawnSync(
     "node",
-    [join(root, "node_modules/astro/astro.js"), "build"],
+    [join(root, "node_modules/astro", astroBin), "build"],
     {
       cwd: fixture,
-      env: { ...process.env, SITE_URL: siteUrl },
+      env: { ...process.env, SITE_URL: siteUrl, BASE_PATH: basePath },
       encoding: "utf8",
     },
   );
@@ -131,4 +137,34 @@ test("configured site identity and HTTPS URL reach visible pages and metadata", 
   } finally {
     await writeFile(config, original);
   }
+});
+
+test("a sub-path deployment prefixes internal links and keeps URLs absolute", async () => {
+  const result = build("https://blog.example.org/", "/PlainBlog");
+  assert.equal(result.status, 0, result.stdout + result.stderr);
+
+  const home = await documentAt("");
+  const articleHref = home.querySelector(".post-list a").getAttribute("href");
+  assert.match(articleHref, /^\/PlainBlog\/blog\/[a-z0-9-]+\/$/);
+  assert.equal(
+    home.querySelector('link[rel="alternate"]').getAttribute("href"),
+    "/PlainBlog/rss.xml",
+  );
+  assert.equal(
+    home.querySelector(".home-link").getAttribute("href"),
+    "/PlainBlog/",
+  );
+
+  const article = await documentAt("blog/markdown-field-guide");
+  assert.equal(
+    article.querySelector('link[rel="canonical"]').getAttribute("href"),
+    "https://blog.example.org/PlainBlog/blog/markdown-field-guide/",
+  );
+
+  const feed = await readFile(join(fixture, "dist/rss.xml"), "utf8");
+  assert.match(
+    feed,
+    /<link>https:\/\/blog\.example\.org\/PlainBlog\/blog\/[a-z0-9-]+\/<\/link>/,
+  );
+  assert.doesNotMatch(feed, /PlainBlog\/PlainBlog/);
 });

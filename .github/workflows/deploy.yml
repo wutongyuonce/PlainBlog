@@ -1,0 +1,66 @@
+name: Deploy demo
+
+# The Astro theme catalog requires a live demo that runs the current major Astro
+# version and stays in sync with the repository, so every push to main rebuilds
+# and republishes it. See docs/SPEC.md for the deployment contract.
+#
+# The steps are spelled out instead of using withastro/action so that the same
+# checks guarding a local change (check, format, test) also gate the demo.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Let an in-flight deployment finish rather than cancelling it mid-publish.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm check
+      - run: pnpm format
+      - run: pnpm test
+
+      # pnpm test builds without a site URL; this build is the artifact the demo
+      # serves, with the sub-path base that a GitHub Pages project site needs.
+      - name: Build the demo
+        run: pnpm build
+        env:
+          SITE_URL: https://wutongyuonce.github.io/
+          BASE_PATH: /PlainBlog
+
+      - uses: actions/configure-pages@v6
+
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5
