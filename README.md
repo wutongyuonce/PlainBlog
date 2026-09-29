@@ -26,7 +26,7 @@ pnpm preview
 
 ## 修改内容
 
-- 编辑 `src/config.ts` 的站点名称、描述与三个导航项。新增独立页面时创建对应的 `src/pages/*.astro` 文件，再在配置的导航数组中加入入口；文章不需要加入目录。
+- 编辑 `src/config.ts` 的站点名称、描述与下拉目录。Home 已固定在面包屑，不要再加入目录。新增独立页面时创建对应的 `src/pages/*.astro` 文件，再在配置的导航数组中加入入口；文章不需要加入目录。
 - 在 `src/content/posts/` 新建单层、全小写 kebab-case 的 `.md` 文件，例如 `my-note.md`。Frontmatter 必须有非空 `title` 和引号包围的 `YYYY-MM-DD` 日期；正文从 `##` 开始。`draft: true` 会从首页和正文输出排除；未写 draft 默认为公开。未来日期不自动隐藏。
 - 编辑 `src/content/pages/home.md` 修改首页介绍；`projects.md` 和 `about.md` 维护独立页面。页面标题由配置或对应 Astro 页面负责。
 - `markdown-field-guide.md` 同时是 Markdown 渲染回归样例；若移除它，请把测试里的该样例路径换成你保留的排版样例。新增普通文章无需修改测试清单。

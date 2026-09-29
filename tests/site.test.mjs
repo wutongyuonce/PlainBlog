@@ -120,7 +120,7 @@ test("all public pages have native navigation and distinct metadata; drafts have
     assert.ok(doc.querySelector("details > summary"));
     assert.deepEqual(
       [...doc.querySelectorAll("details a")].map((a) => a.textContent.trim()),
-      ["Home", "Projects", "About"],
+      ["Projects", "About"],
     );
     assert.ok(
       !doc.querySelector('link[rel="canonical"], meta[property="og:url"]'),

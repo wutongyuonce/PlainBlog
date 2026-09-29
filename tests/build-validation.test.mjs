@@ -105,7 +105,7 @@ test("configured site identity and HTTPS URL reach visible pages and metadata", 
     `export const site = {
       name: "A renamed notebook",
       description: "An isolated build fixture",
-      nav: [{ label: "Home", href: "/" }, { label: "Projects", href: "/projects/" }, { label: "About", href: "/about/" }],
+      nav: [{ label: "Projects", href: "/projects/" }, { label: "About", href: "/about/" }],
     };`,
   );
   try {
