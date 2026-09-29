@@ -5,4 +5,10 @@ export const site = {
     { label: "Projects", href: "/projects/" },
     { label: "About", href: "/about/" },
   ],
+  social: [
+    { label: "GitHub", href: "https://github.com" },
+    { label: "X", href: "https://x.com" },
+    { label: "B站", href: "https://www.bilibili.com" },
+    { label: "小红书", href: "https://www.xiaohongshu.com" },
+  ],
 };

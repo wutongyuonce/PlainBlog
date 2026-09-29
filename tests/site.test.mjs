@@ -74,6 +74,18 @@ test("home is the only index and its dated links reach the rendered articles", a
       (href) => href === "/blog/" || href?.includes("private-draft"),
     ),
   );
+  assert.deepEqual(
+    [...doc.querySelectorAll(".social-link")].map((a) => [
+      a.textContent.trim(),
+      a.getAttribute("href"),
+    ]),
+    [
+      ["GitHub", "https://github.com"],
+      ["X", "https://x.com"],
+      ["B站", "https://www.bilibili.com"],
+      ["小红书", "https://www.xiaohongshu.com"],
+    ],
+  );
 });
 
 test("article uses a noninteractive Blog crumb and ships rendered Markdown", async () => {

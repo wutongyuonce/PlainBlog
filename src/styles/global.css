@@ -75,6 +75,7 @@ a:hover {
   outline-offset: 4px;
 }
 .shell {
+  position: relative;
   width: 100%;
   max-width: 65ch;
   margin: 0 auto;
@@ -144,10 +145,10 @@ a:hover {
   list-style: none;
 }
 .theme-toggle {
-  position: fixed;
-  z-index: 4;
-  top: 28px;
-  right: 16px;
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  right: 0;
   display: grid;
   place-items: center;
   width: 32px;
@@ -229,6 +230,30 @@ h1,
 .intro {
   margin-bottom: 40px;
 }
+.intro .social-link {
+  white-space: nowrap;
+  text-decoration: none;
+}
+.intro .social-link svg {
+  width: 1em;
+  height: 1em;
+  margin-right: 0.18em;
+  vertical-align: -0.15em;
+}
+.intro .social-link svg.fill {
+  fill: currentColor;
+}
+.intro .social-link svg.stroke {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.intro .social-link span {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
 .year-group {
   margin-bottom: 32px;
 }
@@ -303,7 +328,7 @@ h1,
 }
 .intro em,
 .prose em {
-  padding-inline-end: 0.35em;
+  padding-inline: 0.12em;
 }
 .prose h2,
 .prose h3,
