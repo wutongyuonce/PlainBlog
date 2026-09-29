@@ -318,6 +318,10 @@ h1,
 .prose strong {
   color: var(--fg);
 }
+.intro a:not(.social-link),
+.prose a {
+  padding-inline: 0.12em;
+}
 .prose strong {
   font-weight: 600;
 }
