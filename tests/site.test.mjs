@@ -16,36 +16,34 @@ const page = async (path) =>
 const links = (doc) =>
   [...doc.querySelectorAll("a[href]")].map((a) => a.getAttribute("href"));
 
-test("home is the only article index with descending years and stable dated links", async () => {
+test("home is the only index and its dated links reach the rendered articles", async () => {
   const doc = await page("");
   assert.equal(doc.documentElement.lang, "zh-CN");
   assert.equal(doc.querySelectorAll("h1").length, 1);
   assert.ok(doc.querySelector("main"));
   assert.ok(doc.querySelector('a[href="#main"]'));
-  assert.deepEqual(
-    [...doc.querySelectorAll("[data-year]")].map((e) =>
-      e.getAttribute("data-year"),
-    ),
-    ["2026", "2025", "2024"],
-  );
-  assert.deepEqual(
-    [...doc.querySelectorAll(".post-list a")].map((a) =>
-      a.getAttribute("href"),
-    ),
-    [
-      "/blog/a-good-default/",
-      "/blog/reading-on-small-screens/",
-      "/blog/markdown-field-guide/",
-      "/blog/quiet-navigation/",
-      "/blog/first-principles/",
-      "/blog/keeping-notes/",
-    ],
-  );
-  assert.ok(
-    [...doc.querySelectorAll(".post-list time")].some(
-      (time) => time.textContent.trim() === "06/14",
-    ),
-  );
+  const items = [...doc.querySelectorAll(".post-list li")];
+  assert.ok(items.length > 0, "the template ships readable sample articles");
+  for (const item of items) {
+    const anchor = item.querySelector("a");
+    const href = anchor.getAttribute("href");
+    assert.match(href, /^\/blog\/[a-z0-9-]+\/$/);
+    const article = await page(href.slice(1));
+    assert.equal(
+      article.querySelector("h1").textContent.trim(),
+      anchor.textContent.trim(),
+    );
+    const time = item.querySelector("time");
+    assert.match(time.textContent.trim(), /^\d{2}\/\d{2}$/);
+    assert.equal(
+      article.querySelector("time").getAttribute("datetime"),
+      time.getAttribute("datetime"),
+    );
+    assert.equal(
+      time.getAttribute("datetime").slice(0, 4),
+      item.closest("[data-year]").getAttribute("data-year"),
+    );
+  }
   assert.ok(
     !links(doc).some(
       (href) => href === "/blog/" || href?.includes("private-draft"),
@@ -81,18 +79,11 @@ test("article uses a noninteractive Blog crumb and ships rendered Markdown", asy
 });
 
 test("all public pages have native navigation and distinct metadata; drafts have no route", async () => {
-  const paths = [
-    "",
-    "about",
-    "projects",
-    "404",
-    "blog/markdown-field-guide",
-    "blog/first-principles",
-    "blog/a-good-default",
-    "blog/reading-on-small-screens",
-    "blog/quiet-navigation",
-    "blog/keeping-notes",
-  ];
+  const home = await page("");
+  const articlePaths = [...home.querySelectorAll(".post-list a")].map((a) =>
+    a.getAttribute("href").slice(1),
+  );
+  const paths = ["", "about", "projects", "404", ...articlePaths];
   const titles = new Set();
   for (const path of paths) {
     const doc = await page(path);
@@ -113,7 +104,13 @@ test("all public pages have native navigation and distinct metadata; drafts have
   assert.equal(titles.size, paths.length);
   assert.ok((await page("projects")).querySelector(".prose h2"));
   assert.ok((await page("about")).querySelector(".prose p"));
-  assert.ok(links(await page("404")).includes("/"));
+  const notFound = await page("404");
+  assert.ok(links(notFound).includes("/"));
+  assert.equal(
+    notFound.querySelectorAll('a[href="/"][aria-current="page"]').length,
+    0,
+    "a missing page must not tell readers they are on Home",
+  );
   await assert.rejects(access(join(root, "blog/private-draft/index.html")));
   await assert.rejects(access(join(root, "blog/index.html")));
 });

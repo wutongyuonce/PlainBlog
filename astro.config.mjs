@@ -16,6 +16,6 @@ export default defineConfig({
   output: "static",
   trailingSlash: "always",
   ...(site ? { site } : {}),
-  markdown: { shikiConfig: { theme: "github-dark" } },
+  markdown: { shikiConfig: { theme: "vitesse-dark" } },
   image: { service: { entrypoint: "astro/assets/services/noop" } },
 });

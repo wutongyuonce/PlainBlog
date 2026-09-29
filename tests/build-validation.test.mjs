@@ -1,20 +1,60 @@
-import test from "node:test";
+import test, { before, after } from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { readFile, writeFile, unlink } from "node:fs/promises";
+import {
+  cp,
+  mkdtemp,
+  readFile,
+  writeFile,
+  unlink,
+  symlink,
+  rm,
+} from "node:fs/promises";
+import { tmpdir } from "node:os";
 import { fileURLToPath } from "node:url";
 import { join } from "node:path";
 import { parseHTML } from "linkedom";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
-const posts = join(root, "src/content/posts");
+let fixture;
+let posts;
+
+before(async () => {
+  fixture = await mkdtemp(join(tmpdir(), "plainblog-build-"));
+  for (const entry of [
+    "src",
+    "astro.config.mjs",
+    "package.json",
+    "tsconfig.json",
+  ]) {
+    await cp(join(root, entry), join(fixture, entry), { recursive: true });
+  }
+  await symlink(
+    join(root, "node_modules"),
+    join(fixture, "node_modules"),
+    "dir",
+  );
+  posts = join(fixture, "src/content/posts");
+});
+after(async () => {
+  if (fixture) await rm(fixture, { recursive: true, force: true });
+});
+
 function build(siteUrl = "") {
-  return spawnSync("node", ["node_modules/astro/astro.js", "build"], {
-    cwd: root,
-    env: { ...process.env, SITE_URL: siteUrl },
-    encoding: "utf8",
-  });
+  return spawnSync(
+    "node",
+    [join(root, "node_modules/astro/astro.js"), "build"],
+    {
+      cwd: fixture,
+      env: { ...process.env, SITE_URL: siteUrl },
+      encoding: "utf8",
+    },
+  );
 }
+
+const documentAt = async (path) =>
+  parseHTML(await readFile(join(fixture, "dist", path, "index.html"), "utf8"))
+    .document;
 
 test("invalid calendar dates and unsafe slugs stop the build with a file clue", async () => {
   for (const [filename, content, clue] of [
@@ -30,7 +70,7 @@ test("invalid calendar dates and unsafe slugs stop the build with a file clue", 
     ],
   ]) {
     const path = join(posts, filename);
-    await writeFile(path, content);
+    await writeFile(path, content, { flag: "wx" });
     try {
       const result = build();
       assert.notEqual(result.status, 0, `${filename} unexpectedly built`);
@@ -46,6 +86,7 @@ test("a missing relative image fails rather than shipping a broken article", asy
   await writeFile(
     path,
     "---\ntitle: Broken image\ndate: '2025-02-28'\n---\n\n![missing](../../assets/no-such-image.png)\n",
+    { flag: "wx" },
   );
   try {
     const result = build();
@@ -56,17 +97,32 @@ test("a missing relative image fails rather than shipping a broken article", asy
   }
 });
 
-test("an actual configured HTTPS site emits a page-specific canonical", async () => {
-  const result = build("https://blog.example.org/");
-  assert.equal(result.status, 0, result.stdout + result.stderr);
-  const doc = parseHTML(
-    await readFile(
-      join(root, "dist/blog/markdown-field-guide/index.html"),
-      "utf8",
-    ),
-  ).document;
-  assert.equal(
-    doc.querySelector('link[rel="canonical"]')?.getAttribute("href"),
-    "https://blog.example.org/blog/markdown-field-guide/",
+test("configured site identity and HTTPS URL reach visible pages and metadata", async () => {
+  const config = join(fixture, "src/config.ts");
+  const original = await readFile(config, "utf8");
+  await writeFile(
+    config,
+    `export const site = {
+      name: "A renamed notebook",
+      description: "An isolated build fixture",
+      nav: [{ label: "Home", href: "/" }, { label: "Projects", href: "/projects/" }, { label: "About", href: "/about/" }],
+    };`,
   );
+  try {
+    const result = build("https://blog.example.org/");
+    assert.equal(result.status, 0, result.stdout + result.stderr);
+    const home = await documentAt("");
+    assert.equal(
+      home.querySelector("h1").textContent.trim(),
+      "A renamed notebook",
+    );
+    assert.equal(home.title, "Home · A renamed notebook");
+    const article = await documentAt("blog/markdown-field-guide");
+    assert.equal(
+      article.querySelector('link[rel="canonical"]')?.getAttribute("href"),
+      "https://blog.example.org/blog/markdown-field-guide/",
+    );
+  } finally {
+    await writeFile(config, original);
+  }
 });

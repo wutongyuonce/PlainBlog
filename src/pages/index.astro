@@ -3,19 +3,15 @@ import { getCollection } from "astro:content";
 import Base from "../layouts/Base.astro";
 import { selectPublished } from "../lib/publication.mjs";
 import { site } from "../config";
+import HomeIntro from "../content/pages/home.md";
 
 const posts = selectPublished(await getCollection("posts"));
 const years = [...new Set(posts.map((post) => post.data.date.slice(0, 4)))];
 ---
 
 <Base title="Home" description={site.description}>
-  <h1 class="home-title">PlainBlog</h1>
-  <div class="intro">
-    <p>
-      你好，这里是一个关于网页、工具和日常观察的写作练习。文章是演示内容，不代表站点主人的真实经历。
-    </p>
-    <p>喜欢把事情写清楚，也喜欢留下还没想明白的问题。下面是所有公开文章。</p>
-  </div>
+  <h1 class="home-title">{site.name}</h1>
+  <div class="intro"><HomeIntro /></div>
   {posts.length === 0 && <p>还没有公开文章。</p>}
   {
     years.map((year) => (

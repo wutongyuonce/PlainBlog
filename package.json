@@ -2,6 +2,10 @@
   "name": "plainblog",
   "private": true,
   "type": "module",
+  "packageManager": "pnpm@12.6.0",
+  "engines": {
+    "node": ">=22.12.0"
+  },
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
@@ -9,7 +13,7 @@
     "check": "astro check",
     "format": "prettier --check .",
     "format:write": "prettier --write .",
-    "test": "SITE_URL= astro build && node --test tests/publication.test.mjs tests/site.test.mjs && node --test tests/build-validation.test.mjs && SITE_URL= astro build",
+    "test": "SITE_URL= astro build && node --test tests/*.test.mjs",
     "lint": "astro check"
   },
   "dependencies": {

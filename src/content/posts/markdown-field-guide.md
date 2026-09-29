@@ -23,7 +23,7 @@ date: "2025-06-14"
 
 ### 链接、图片与宽内容
 
-可以阅读 [Markdown Guide](https://www.markdownguide.org/basic-syntax/)，也可以测试一条很长的链接：[一份带有很长路径的说明](https://example.org/notes/this-is-a-deliberately-long-path-for-testing-how-links-wrap-on-very-narrow-devices/without-breaking-the-whole-page)。示例图片是仓库自带的几何图，不请求远程图床。
+可以阅读 [Markdown Guide](https://www.markdownguide.org/basic-syntax/)，也可以测试一条很长的链接：<https://example.org/notes/this-is-a-deliberately-long-path-for-testing-how-links-wrap-on-very-narrow-devices/without-breaking-the-whole-page>。示例图片是仓库自带的几何图，不请求远程图床。
 
 ![三条不同长度的横线组成的示意图](../../assets/reading-lines.svg)
 
@@ -34,11 +34,11 @@ const explain = (topic) =>
 console.log(explain("readable layouts without a viewport-wide scrollbar"));
 ```
 
-| 测试区域 | 关注点           | 在狭窄窗口的预期行为             |
-| -------- | ---------------- | -------------------------------- |
-| 正文     | 长链接会换行     | 页面不会被单词撑宽               |
-| 代码     | 保留缩进和高亮   | 只在代码块内滚动，不改变页面宽度 |
-| 表格     | 列不会被强制挤坏 | 表格自己的区域可横向滚动         |
+| 测试区域 |      关注点      |             在狭窄窗口的预期行为 |
+| :------- | :--------------: | -------------------------------: |
+| 正文     |   长链接会换行   |               页面不会被单词撑宽 |
+| 代码     |  保留缩进和高亮  | 只在代码块内滚动，不改变页面宽度 |
+| 表格     | 列不会被强制挤坏 |         表格自己的区域可横向滚动 |
 
 旧的~~一次性截图~~并不能代替重新构建与阅读。
 

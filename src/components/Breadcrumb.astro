@@ -6,6 +6,7 @@ interface Props {
   article?: string;
 }
 const { current, article } = Astro.props;
+const currentPath = Astro.url.pathname;
 ---
 
 <nav class="breadcrumbs" aria-label="面包屑">
@@ -13,7 +14,7 @@ const { current, article } = Astro.props;
     class="home-link"
     href="/"
     aria-label="Home"
-    aria-current={!current && !article ? "page" : undefined}
+    aria-current={currentPath === "/" ? "page" : undefined}
   >
     <svg
       aria-hidden="true"
@@ -49,12 +50,7 @@ const { current, article } = Astro.props;
         site.nav.map(({ label, href }) => (
           <a
             href={href}
-            aria-current={
-              (!article && current === label) ||
-              (!article && !current && label === "Home")
-                ? "page"
-                : undefined
-            }
+            aria-current={currentPath === href ? "page" : undefined}
           >
             {label}
           </a>
@@ -65,32 +61,28 @@ const { current, article } = Astro.props;
   {
     current && (
       <>
-        <>
-          <span class="separator" aria-hidden="true">
-            /
-          </span>
-          <span class="crumb-current" aria-current="page">
-            {current}
-          </span>
-        </>
+        <span class="separator" aria-hidden="true">
+          /
+        </span>
+        <span class="crumb-current" aria-current="page">
+          {current}
+        </span>
       </>
     )
   }
   {
     article && (
       <>
-        <>
-          <span class="separator" aria-hidden="true">
-            /
-          </span>
-          <span>Blog</span>
-          <span class="separator article-tail" aria-hidden="true">
-            /
-          </span>
-          <span class="crumb-current article-tail" aria-current="page">
-            {article}
-          </span>
-        </>
+        <span class="separator" aria-hidden="true">
+          /
+        </span>
+        <span class="crumb-section">Blog</span>
+        <span class="separator" aria-hidden="true">
+          /
+        </span>
+        <span class="crumb-current" aria-current="page" title={article}>
+          {article}
+        </span>
       </>
     )
   }
