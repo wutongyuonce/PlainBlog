@@ -100,6 +100,7 @@ a:hover {
   color: var(--muted);
   font-size: 14px;
   white-space: nowrap;
+  padding-right: 40px;
 }
 .breadcrumbs .home-link {
   display: inline-flex;
@@ -131,18 +132,31 @@ a:hover {
   position: relative;
   flex: none;
 }
-.site-menu summary,
-.theme-toggle {
+.site-menu summary {
   display: grid;
   place-items: center;
   width: 28px;
   height: 32px;
   padding: 0;
   border: 0;
-  background: transparent;
   color: inherit;
   cursor: pointer;
   list-style: none;
+}
+.theme-toggle {
+  position: fixed;
+  z-index: 4;
+  top: 28px;
+  right: 16px;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
 }
 .site-menu summary::-webkit-details-marker {
   display: none;
@@ -286,6 +300,10 @@ h1,
 }
 .prose strong {
   font-weight: 600;
+}
+.intro em,
+.prose em {
+  padding-inline-end: 0.35em;
 }
 .prose h2,
 .prose h3,

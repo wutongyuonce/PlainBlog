@@ -71,35 +71,6 @@ const currentPath = Astro.url.pathname;
       >
     </div>
   </details>
-  <button type="button" class="theme-toggle" aria-label="切换配色"
-    ><svg
-      class="icon-sun"
-      aria-hidden="true"
-      viewBox="0 0 16 16"
-      width="14"
-      height="14"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="1.5"
-      stroke-linecap="round"
-      ><circle cx="8" cy="8" r="2.2"></circle><path
-        d="M8 1.6v1.6M8 12.8v1.6M1.6 8h1.6M12.8 8h1.6M3.4 3.4l1.1 1.1M11.5 11.5l1.1 1.1M12.6 3.4l-1.1 1.1M4.5 11.5l-1.1 1.1"
-      ></path></svg
-    ><svg
-      class="icon-moon"
-      aria-hidden="true"
-      viewBox="0 0 16 16"
-      width="14"
-      height="14"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="1.5"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      ><path d="M9.2 2.2a4.8 4.8 0 1 0 4.6 6.4 3.8 3.8 0 1 1-4.6-6.4z"
-      ></path></svg
-    ></button
-  >
   {
     current && (
       <>
@@ -154,18 +125,4 @@ const currentPath = Astro.url.pathname;
         }
       });
     });
-  const toggle = document.querySelector<HTMLButtonElement>(".theme-toggle");
-  const syncThemeButton = () => {
-    const light = document.documentElement.dataset.theme === "light";
-    toggle?.setAttribute("aria-pressed", String(light));
-    toggle?.setAttribute("aria-label", light ? "切换为深色" : "切换为浅色");
-  };
-  syncThemeButton();
-  toggle?.addEventListener("click", () => {
-    const next =
-      document.documentElement.dataset.theme === "light" ? "dark" : "light";
-    document.documentElement.dataset.theme = next;
-    localStorage.setItem("theme", next);
-    syncThemeButton();
-  });
 </script>
