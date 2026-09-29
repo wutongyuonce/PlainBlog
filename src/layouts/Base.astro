@@ -19,7 +19,24 @@ const canonical = Astro.site
 <html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
+    <script is:inline>
+      try {
+        var saved = localStorage.getItem("theme");
+        document.documentElement.dataset.theme =
+          saved === "light" || saved === "dark"
+            ? saved
+            : matchMedia("(prefers-color-scheme: light)").matches
+              ? "light"
+              : "dark";
+      } catch {}
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title={`${site.name} RSS`}
+      href="/rss.xml"
+    />
     <meta name="description" content={description} />
     <title>{title} · {site.name}</title>
     {canonical && <link rel="canonical" href={canonical} />}

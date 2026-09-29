@@ -1,6 +1,6 @@
 # PlainBlog
 
-黑色极简静态博客。首页按年份列出文章，正文使用紧凑的 Markdown 排版；导航是无背景框的面包屑和按需展开的目录。
+黑色极简静态博客，也可切换为白底。首页按年份列出文章，正文使用紧凑的 Markdown 排版；导航是无背景框的面包屑和按需展开的目录。
 
 ![首页](docs/previews/home.png)
 
@@ -40,4 +40,4 @@ pnpm preview
 
 执行 `pnpm build`，把 `dist/` 发布到静态站点根路径。生产域名确定后，在构建环境设置 `SITE_URL=https://your-domain.example/`（必须是绝对 HTTP(S) 地址），构建才会输出对应页面的 canonical；不设置时不输出 canonical。无需服务端、数据库或运行时环境变量。
 
-配置主机把未知路径映射到 `dist/404.html`，并返回 HTTP 404。`/blog/` 没有汇总页面，也不会自动跳转。目录开关的原生功能不依赖 JavaScript。
+配置主机把未知路径映射到 `dist/404.html`，并返回 HTTP 404。`/blog/` 没有汇总页面，也不会自动跳转。目录开关的原生功能不依赖 JavaScript。配色按钮会记住选择；没有 JavaScript 时跟随系统。订阅地址是 `/rss.xml`，只包含公开文章全文；设置 `SITE_URL` 后，订阅项和图片地址才会变成绝对链接。

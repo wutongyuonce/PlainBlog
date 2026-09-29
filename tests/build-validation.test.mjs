@@ -122,6 +122,12 @@ test("configured site identity and HTTPS URL reach visible pages and metadata", 
       article.querySelector('link[rel="canonical"]')?.getAttribute("href"),
       "https://blog.example.org/blog/markdown-field-guide/",
     );
+    const feed = await readFile(join(fixture, "dist/rss.xml"), "utf8");
+    assert.match(
+      feed,
+      /<link>https:\/\/blog\.example\.org\/blog\/markdown-field-guide\/<\/link>/,
+    );
+    assert.match(feed, /<title>A renamed notebook<\/title>/);
   } finally {
     await writeFile(config, original);
   }

@@ -118,9 +118,17 @@ test("all public pages have native navigation and distinct metadata; drafts have
     );
     assert.equal(doc.querySelectorAll("h1").length, 1);
     assert.ok(doc.querySelector("details > summary"));
+    const menu = [...doc.querySelectorAll("details a")];
     assert.deepEqual(
-      [...doc.querySelectorAll("details a")].map((a) => a.textContent.trim()),
-      ["Projects", "About"],
+      menu.map((a) => a.textContent.trim()),
+      ["Projects", "About", "RSS"],
+    );
+    assert.equal(menu.at(-1).getAttribute("href"), "/rss.xml");
+    assert.ok(menu.at(-1).querySelector("svg"), "RSS shows a departure arrow");
+    assert.ok(doc.querySelector("button.theme-toggle"));
+    assert.equal(
+      doc.querySelector('link[rel="alternate"]')?.getAttribute("href"),
+      "/rss.xml",
     );
     assert.ok(
       !doc.querySelector('link[rel="canonical"], meta[property="og:url"]'),
@@ -138,4 +146,11 @@ test("all public pages have native navigation and distinct metadata; drafts have
   );
   await assert.rejects(access(join(root, "blog/private-draft/index.html")));
   await assert.rejects(access(join(root, "blog/index.html")));
+  const feed = await readFile(join(root, "rss.xml"), "utf8");
+  assert.match(feed, /<content:encoded>/);
+  assert.match(feed, /Markdown 排版实验手记/);
+  assert.match(feed, /写在前面/);
+  assert.doesNotMatch(feed, /未公开的草稿样本|小项目/);
+  assert.match(feed, /<link>\/blog\/markdown-field-guide\/<\/link>/);
+  assert.doesNotMatch(feed, /<link>https?:/);
 });

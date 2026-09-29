@@ -9,7 +9,8 @@ PlainBlog 是 Astro 静态站点；`astro.config.mjs` 固定静态输出、尾�
 | 日期日历语义、平面 slug、draft 排除、日期与 slug 排序、重复 ID | `src/lib/publication.mjs`                    | 内容 schema/loader、首页、文章 `getStaticPaths()`                                       |
 | 文档 head 与页面外壳                                           | `src/layouts/Base.astro`                     | 全部路由                                                                                |
 | 面包屑与唯一站点目录                                           | `src/components/Breadcrumb.astro`            | Base；按实际 URL 判断当前页；原生 details/summary 管开闭，脚本只处理外点、Esc、Tab 离开 |
-| 页面与正文排版                                                 | `src/styles/global.css`                      | 全站及文章、Projects、About 的 `.prose`                                                 |
+| 页面与正文排版                                                 | `src/styles/global.css`                      | 全站及文章、Projects、About 的 `.prose`；浅色和深色只换这一组变量                       |
+| 公开文章 RSS                                                   | `src/pages/rss.xml.ts`                       | 复用 publication 的公开结果；不另写筛选规则                                             |
 
 首页 `src/pages/index.astro` 是唯一聚合页面；文章路由 `src/pages/blog/[slug].astro` 只用发布选择结果生成路径。首页介绍和 Projects/About 引入 `src/content/pages/` 下的 Markdown 组件，而文章走 `src/content/posts/` 集合。HTML 的唯一 h1 由路由生成，Markdown 正文从 h2 开始。静态 404 来自 `src/pages/404.astro`。
 
