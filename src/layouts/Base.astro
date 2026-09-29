@@ -20,6 +20,7 @@ const canonical = Astro.site
   <head>
     <meta charset="UTF-8" />
     <script is:inline>
+      document.documentElement.dataset.js = "true";
       try {
         var saved = localStorage.getItem("theme");
         document.documentElement.dataset.theme =
@@ -80,7 +81,6 @@ const canonical = Astro.site
       const toggle = document.querySelector<HTMLButtonElement>(".theme-toggle");
       const syncThemeButton = () => {
         const light = document.documentElement.dataset.theme === "light";
-        toggle?.setAttribute("aria-pressed", String(light));
         toggle?.setAttribute("aria-label", light ? "切换为深色" : "切换为浅色");
       };
       syncThemeButton();
