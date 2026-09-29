@@ -1,6 +1,11 @@
 {
   "name": "plainblog",
+  "description": "黑色极简静态博客",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wutongyuonce/PlainBlog.git"
+  },
   "type": "module",
   "packageManager": "pnpm@12.6.0",
   "engines": {
